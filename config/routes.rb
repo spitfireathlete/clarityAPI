@@ -14,6 +14,14 @@ ClarityAPI::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   resources :users
+  
+  namespace :api do
+      resources :priorities
+      resources :projects
+      resources :ideas
+      resources :comments
+      resources :collaborations 
+    end
 
   # Example resource route with options:
   #   resources :products do
@@ -54,5 +62,8 @@ ClarityAPI::Application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  root :to => "users#index"
+  authenticated :user do
+     root :to => 'api/projects#index.json', :as => :authenticated_root
+   end
+   root :to => redirect('/users/sign_in')
 end
