@@ -4,7 +4,9 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.1'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+# gem 'sqlite3'
+# Use postgres as heroku suggests
+gem 'pg'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -27,6 +29,18 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+# Adding thin webserver
+gem 'thin'
+
+# Awesome Print
+gem 'awesome_print', '~> 1.1.0'
+
+# Make routing case-insensitive
+gem 'route_downcaser'
+
+# Ruby API Builder
+gem 'rabl'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -43,3 +57,6 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+# For heroku integration
+gem 'rails_12factor', group: :production
