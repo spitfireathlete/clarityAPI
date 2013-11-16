@@ -4,6 +4,6 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
          
-         has_many :collaborations, :through => :collaborations, :source => :project
+         has_many :accessible_projects, :through => :collaborations, :source => :project
          has_many :projects
 end
