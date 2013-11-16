@@ -63,7 +63,7 @@ ClarityAPI::Application.routes.draw do
   #     resources :products
   #   end
   authenticated :user do
-     root :to => 'api/projects#index.json', :as => :authenticated_root
+     root :to => 'users#index', :as => :authenticated_root
    end
    root :to => redirect('/users/sign_in')
 end
