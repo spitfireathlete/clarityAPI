@@ -60,3 +60,5 @@ end
 
 # For heroku integration
 gem 'rails_12factor', group: :production
+
+gem 'devise'
