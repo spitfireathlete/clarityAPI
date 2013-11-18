@@ -4,7 +4,6 @@ module Api
     before_action :set_project
     before_action :set_idea, only: [:show, :edit, :update, :destroy]
      
-    # get all ideas where you are the author
     def index
       @ideas = Idea.where(:project_id => @project.id)
       respond_with @ideas
