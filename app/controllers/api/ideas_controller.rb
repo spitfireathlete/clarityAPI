@@ -14,8 +14,8 @@ module Api
 
     def create
       @idea = Idea.new(idea_params)
-      @idea = current_user.id
-      
+      @idea.user_id = current_user.id
+
       if @idea.save
         respond_to do |format|
           format.json { render json: @idea, status: :created }
@@ -31,14 +31,10 @@ module Api
     def set_project
       @idea = Idea.find(params[:id])
     end
-    
-    
-    
-     # Never trust parameters from the scary internet, only allow the white list through.
-      def idea_params
-        params.require(:idea).permit(:topic, :details)
-        
-      end
+      
+    def idea_params
+      params.require(:idea).permit(:text, :project_id)      
+    end
      
   end
   
