@@ -2,9 +2,14 @@ module Api
   class ProjectsController < ApiController
 
     before_action :set_project, only: [:show, :edit, :update, :destroy]
-     
+    
+    # get all projects you are a collaborator on (i.e you are the author or you have been invited)
     def index
-      @projects = Project.all
+      my_projects = Project.where(:user_id => current_user.id)
+      my_collaborations = Collaboration.where(:user_id => current_user.id)
+      my_invited_projects = my_collaborations.map {|e| e.project}
+      @projects = my_projects.concat(my_invited_projects)
+      
       respond_with @projects
     end
     

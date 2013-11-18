@@ -3,8 +3,9 @@ module Api
 
     before_action :set_idea, only: [:show, :edit, :update, :destroy]
      
+    # get all ideas where you are the author
     def index
-      @ideas = Idea.all
+      @ideas = Idea.where(:user_id => current_user.id)
       respond_with @ideas
     end
     
@@ -26,9 +27,10 @@ module Api
         end
       end
     end
-
+    
+    
     private
-    def set_project
+    def set_idea
       @idea = Idea.find(params[:id])
     end
       

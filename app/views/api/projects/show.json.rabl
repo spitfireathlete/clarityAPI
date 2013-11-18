@@ -11,7 +11,7 @@ child :user do
 end
 
 
-child :ideas do
+child :ideas, :object_root => false do
 	
 	attributes :id, :text, :upvotes, :downvotes
 	node do |idea|
@@ -20,7 +20,7 @@ child :ideas do
 	end
 
 	
-	child :comments do
+	child :comments, :object_root => false do
 		attributes :text, :upvotes, :downvotes
 		node do |comment|
 			u = comment.user
