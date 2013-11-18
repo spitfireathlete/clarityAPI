@@ -17,10 +17,13 @@ ClarityAPI::Application.routes.draw do
   
   namespace :api do
       resources :priorities
-      resources :projects
       resources :ideas
       resources :comments
-      resources :collaborations 
+      
+      resources :projects do
+        resources :collaborations
+      end
+      
     end
 
   # Example resource route with options:
