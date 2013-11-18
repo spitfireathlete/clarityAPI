@@ -25,8 +25,12 @@ ClarityAPI::Application.routes.draw do
         end        
       end
       
+      put 'ideas/:idea_id/upvote', to: 'ideas#upvote'
+      put 'ideas/:idea_id/downvote', to: 'ideas#downvote'
       
-      
+      put 'comments/:comment_id/upvote', to: 'comments#upvote'
+      put 'comments/:comment_id/downvote', to: 'comments#downvote'
+       
     end
 
   # Example resource route with options:
