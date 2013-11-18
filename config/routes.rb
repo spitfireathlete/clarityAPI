@@ -17,12 +17,15 @@ ClarityAPI::Application.routes.draw do
   
   namespace :api do
       resources :priorities
-      resources :ideas
-      resources :comments
       
       resources :projects do
         resources :collaborations
+        resources :ideas do
+          resources :comments
+        end        
       end
+      
+      
       
     end
 
