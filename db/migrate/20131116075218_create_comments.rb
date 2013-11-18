@@ -4,8 +4,8 @@ class CreateComments < ActiveRecord::Migration
       t.references :user, index: true
       t.references :idea, index: true
       t.string :text
-      t.integer :upvotes
-      t.integer :downvotes
+      t.integer :upvotes, :null => false, :default => 0
+      t.integer :downvotes, :null => false, :default => 0
       t.timestamps
     end
   end
