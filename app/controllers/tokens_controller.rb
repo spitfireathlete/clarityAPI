@@ -1,21 +1,36 @@
 class TokensController  < ApplicationController
+  require "net/http"
+  require "uri"
+  require 'securerandom'
 
     skip_before_filter :verify_authenticity_token
     respond_to :json
     
     def create
-    email = params[:email]
-    
-    client = Restforce.new :oauth_token => auth_params[:sf_oauth_token],
-      :instance_url  => auth_params[:instance_url]
+ 
+      begin
+      response = fetch(auth_params[:identity_url])
       
-      response = client.authenticate!
-
-      info = client.get(response.id).body
-      puts info
-      user_id = info.user_id
+      if response.code == '200' then
+        parsed_json = ActiveSupport::JSON.decode(response.body)
+        email = parsed_json['email']
+        first_name = parsed_json['first_name']
+        last_name = parsed_json['last_name']
       
-
+        @user = User.where(:email => email).first_or_initialize
+        @user.first_name = first_name
+        @user.last_name = last_name 
+        @user.password = SecureRandom.hex(10) 
+        @user.save!
+        
+      end
+      
+           
+      rescue Net::HTTPServerException
+        logger.info("Invalid credentials provided")
+        render :status=>response.code, :json=>{:message=>"Invalid credentials"}
+        return
+      end
 
       if @user.nil?
         logger.info("Failed signin, user cannot be found.")
@@ -23,19 +38,16 @@ class TokensController  < ApplicationController
         return
       end
     
-      if not @user.valid_password?(password)
-        logger.info("User #{email} failed signin, password \"#{password}\" is invalid")
-        render :status=>401, :json=>{:message=>"Invalid email or password."}
-        return
-      end
-        
-    # http://rdoc.info/github/plataformatec/devise/master/Devise/Models/TokenAuthenticatable
-    @user.ensure_authentication_token!
+      # http://rdoc.info/github/plataformatec/devise/master/Devise/Models/TokenAuthenticatable
+      @user.ensure_authentication_token!
  
       render :status=>200, :json=>{:token=>@user.authentication_token,
         :email => @user.email,
       }
-  end
+      
+    end
+  
+  
  
   def destroy
     find_user_by_token
@@ -55,9 +67,35 @@ class TokensController  < ApplicationController
       @user=User.find_by_authentication_token(params[:id])
     end
     
+    def fetch(uri_str, limit = 10)
+      # poor man's client for the salesforce API
+      # just want to check the ouath-token, don't need a full featured client
+      # apparently salesforce redirects you a bunch of times
+    
+      raise ArgumentError, 'HTTP redirect too deep' if limit == 0
+
+      url = URI.parse(uri_str)
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+    
+      req = Net::HTTP::Get.new(url.request_uri)
+      req["Authorization"] = "OAuth " + auth_params[:sf_oauth_token]  
+    
+      response = http.start { |http| 
+        http.request(req) 
+      }
+      case response
+      when Net::HTTPSuccess     then response
+      when Net::HTTPRedirection then fetch(response['location'], limit - 1)
+      else
+        response.error!
+      end
+      
+    end
+    
 
     def auth_params
-      params.require(:token).permit(:sf_oauth_token, :identity_url, :instance_url)
+      params.require(:token).permit(:sf_oauth_token, :identity_url)
     end
  
 end
