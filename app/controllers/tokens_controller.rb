@@ -28,7 +28,7 @@ class TokensController  < ApplicationController
            
       rescue Net::HTTPServerException
         logger.info("Invalid credentials provided")
-        render :status=>response.code, :json=>{:message=>"Invalid credentials"}
+        render :status=>401, :json=>{:message=>"Invalid credentials"}
         return
       end
 
