@@ -64,3 +64,5 @@ gem 'rails_12factor', group: :production
 gem 'restforce'
 
 gem 'devise'
+
+gem 'fb_graph'

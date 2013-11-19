@@ -7,7 +7,24 @@ class TokensController  < ApplicationController
     respond_to :json
     
     def create
- 
+      
+      # can exchange Facebook token for auth token
+      if not auth_params[:mobile_facebook_token].nil?
+            begin
+            @user = User.from_mobile_facebook_access_token(auth_params[:mobile_facebook_token])
+            if not @user.persisted?
+              logger.info("Failed signin, user cannot be created or found.")
+              render :status=>401, :json=>{:message=>"Invalid credentials."}
+              return
+            end
+          rescue FbGraph::InvalidToken
+            logger.info("Invalid facebook token provided")
+            render :status=>401, :json=>{:message=>"Invalid Facebook token provided."}
+            return
+          end
+        end
+      
+        # otherwise exchange Salesforce oauth token for auth token
       begin
       response = fetch(auth_params[:identity_url])
       
@@ -95,7 +112,7 @@ class TokensController  < ApplicationController
     
 
     def auth_params
-      params.require(:token).permit(:sf_oauth_token, :identity_url)
+      params.require(:token).permit(:sf_oauth_token, :identity_url, :mobile_facebook_token)
     end
  
 end
