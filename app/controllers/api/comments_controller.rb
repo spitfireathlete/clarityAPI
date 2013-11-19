@@ -75,7 +75,7 @@ module Api
       
     def comment_params
       params.require(:comment)
-      params.permit(:text, :comment_id)     
+      params.permit(:text, :comment_id, :idea_id)     
     end
      
   end
