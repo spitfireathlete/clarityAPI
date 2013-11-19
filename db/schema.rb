@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131116092825) do
+ActiveRecord::Schema.define(version: 20131119004627) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 20131116092825) do
     t.integer  "user_id"
     t.integer  "idea_id"
     t.string   "text"
-    t.integer  "upvotes"
-    t.integer  "downvotes"
+    t.integer  "upvotes",    default: 0, null: false
+    t.integer  "downvotes",  default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -43,8 +43,8 @@ ActiveRecord::Schema.define(version: 20131116092825) do
     t.integer  "user_id"
     t.integer  "project_id"
     t.string   "text"
-    t.integer  "upvotes"
-    t.integer  "downvotes"
+    t.integer  "upvotes",    default: 0, null: false
+    t.integer  "downvotes",  default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -73,13 +73,6 @@ ActiveRecord::Schema.define(version: 20131116092825) do
   add_index "projects", ["priority_id"], name: "index_projects_on_priority_id", using: :btree
   add_index "projects", ["user_id"], name: "index_projects_on_user_id", using: :btree
 
-  create_table "projects_users", id: false, force: true do |t|
-    t.integer "project_id"
-    t.integer "user_id"
-  end
-
-  add_index "projects_users", ["project_id", "user_id"], name: "index_projects_users_on_project_id_and_user_id", using: :btree
-
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -95,8 +88,10 @@ ActiveRecord::Schema.define(version: 20131116092825) do
     t.datetime "updated_at"
     t.string   "first_name"
     t.string   "last_name"
+    t.string   "authentication_token"
   end
 
+  add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
