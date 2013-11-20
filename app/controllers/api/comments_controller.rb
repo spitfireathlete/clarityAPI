@@ -17,7 +17,7 @@ module Api
       @comment = Comment.new(comment_params)
       @comment.user_id = current_user.id
       @comment.idea_id = @idea.id
-      
+
       if @comment.save
         respond_to do |format|
           format.json { render json: @comment, status: :created }
