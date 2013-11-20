@@ -26,6 +26,8 @@ ClarityAPI::Application.routes.draw do
         end        
       end
       
+      get 'me/projects', to: 'projects#contributions'
+      
       put 'ideas/:idea_id/upvote', to: 'ideas#upvote'
       put 'ideas/:idea_id/downvote', to: 'ideas#downvote'
       
