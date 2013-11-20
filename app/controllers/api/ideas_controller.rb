@@ -1,11 +1,16 @@
 module Api
   class IdeasController < ApiController
 
-    before_action :set_project, except: [:upvote, :downvote]
+    before_action :set_project, except: [:upvote, :downvote, :contributions]
     before_action :set_idea, only: [:show, :edit, :update, :destroy, :upvote, :downvote]
      
     def index
       @ideas = Idea.where(:project_id => @project.id)
+      respond_with @ideas
+    end
+    
+    def contributions
+      @ideas = Idea.where(:user_id => current_user.id)
       respond_with @ideas
     end
     
