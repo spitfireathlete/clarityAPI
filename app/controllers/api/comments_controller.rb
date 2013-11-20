@@ -16,7 +16,8 @@ module Api
     def create
       @comment = Comment.new(comment_params)
       @comment.user_id = current_user.id
-
+      @comment.idea_id = @idea.id
+      
       if @comment.save
         respond_to do |format|
           format.json { render json: @comment, status: :created }
@@ -74,8 +75,7 @@ module Api
     end
       
     def comment_params
-      params.require(:comment)
-      params.permit(:text, :comment_id, :idea_id)     
+      params.require(:comment).permit(:text)
     end
      
   end
