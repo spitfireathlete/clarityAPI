@@ -112,7 +112,7 @@ class TokensController  < ApplicationController
     
 
     def auth_params
-      params.require(:token).permit(:sf_oauth_token, :identity_url, :mobile_facebook_token)
+      params.permit(:token, :sf_oauth_token, :identity_url, :mobile_facebook_token)
     end
  
 end
