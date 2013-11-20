@@ -18,7 +18,7 @@ module Api
     def create
       @collaboration = Collaboration.where(:user_id => collab_params[:user_id], :project_id => collab_params[:project_id]).first_or_create
       
-      if @collaboration.save
+      if @collaboration.save!
         respond_to do |format|
           format.json { render json: @collaboration, status: :created }
         end

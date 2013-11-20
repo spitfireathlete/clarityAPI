@@ -27,7 +27,8 @@ module Api
       @project.priority_id =  @priority.id
       @project.user_id = current_user.id
       
-      if @project.save
+      if @project.save!
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @project.id).first_or_create
         respond_to do |format|
           format.json { render json: @project, status: :created }
         end

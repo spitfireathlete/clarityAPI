@@ -18,7 +18,7 @@ module Api
       @comment.user_id = current_user.id
       @comment.idea_id = @idea.id
 
-      if @comment.save
+      if @comment.save!
         @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @comment, status: :created }
