@@ -19,6 +19,7 @@ module Api
       @comment.idea_id = @idea.id
 
       if @comment.save
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @comment, status: :created }
         end
@@ -36,6 +37,8 @@ module Api
       
       @comment.upvotes = @comment.upvotes + 1
       if @comment.save
+        @idea = Idea.find(@comment.idea_id)
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @comment, status: :created }
         end
@@ -53,6 +56,8 @@ module Api
       
       @comment.downvotes = @comment.downvotes + 1
       if @comment.save
+        @idea = Idea.find(@comment.idea_id)
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @comment, status: :created }
         end

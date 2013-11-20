@@ -18,6 +18,7 @@ module Api
       @idea.user_id = current_user.id
       
       if @idea.save
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @project.id).first_or_create
         respond_to do |format|
           format.json { render json: @idea, status: :created }
         end
@@ -35,6 +36,7 @@ module Api
       
       @idea.upvotes = @idea.upvotes + 1
       if @idea.save
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @idea, status: :created }
         end
@@ -52,6 +54,7 @@ module Api
       
       @idea.downvotes = @idea.downvotes + 1
       if @idea.save
+        @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @idea.project_id).first_or_create
         respond_to do |format|
           format.json { render json: @idea, status: :created }
         end
