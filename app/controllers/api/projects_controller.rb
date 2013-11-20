@@ -17,7 +17,7 @@ module Api
       @projects = my_projects.concat(projects_contributed_to).to_set
       respond_with @projects
     end
-    
+     
     def show
       respond_with @project
     end
