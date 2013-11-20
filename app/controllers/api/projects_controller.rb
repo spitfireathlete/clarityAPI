@@ -32,9 +32,7 @@ module Api
         @project.priority_id =  @priority.id
         @project.user_id = current_user.id 
       else
-        respond_to do |format|
-          format.json { render json: @project, status: :not_modified}
-        end
+        respond_with @project
         return
       end
       
