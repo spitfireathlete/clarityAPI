@@ -21,7 +21,7 @@ module Api
     def create
       @idea = Idea.new(idea_params)
       @idea.user_id = current_user.id
-      
+      @idea.project_id = @project.id
       if @idea.save!
         @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @project.id).first_or_create
         respond_to do |format|
@@ -82,9 +82,8 @@ module Api
     end
       
     def idea_params
-      params.require(:idea)
-      params.permit(:project_id, :text)
- 
+      params.require(:idea).permit(:text)
+
     end
      
   end
