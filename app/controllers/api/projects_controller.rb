@@ -1,5 +1,6 @@
 module Api
   class ProjectsController < ApiController
+    require'set'
 
     before_action :set_project, only: [:show, :edit, :update, :destroy]
     
@@ -13,7 +14,7 @@ module Api
       my_collaborations = Collaboration.where(:user_id => current_user.id)
       projects_contributed_to = my_collaborations.map {|e| e.project}
       
-      @projects = my_projects.concat(projects_contributed_to)
+      @projects = my_projects.concat(projects_contributed_to).to_set
       respond_with @projects
     end
     
