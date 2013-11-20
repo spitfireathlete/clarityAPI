@@ -24,20 +24,34 @@ module Api
 
     def create
       get_priority_from_salesforce_id
-      @project = Project.new(project_params)
-      @project.priority_id =  @priority.id
-      @project.user_id = current_user.id
+      @project = Project.where(project_params)[0]
+      
+     
+      if @project.nil? then
+        @project = Project.new(project_params)
+        @project.priority_id =  @priority.id
+        @project.user_id = current_user.id 
+      else
+        respond_to do |format|
+          format.json { render json: @project, status: :not_modified}
+        end
+        return
+      end
+      
       
       if @project.save!
         @collaboration = Collaboration.where(:user_id => current_user.id, :project_id => @project.id).first_or_create
         respond_to do |format|
           format.json { render json: @project, status: :created }
         end
+        
       else
         respond_to do |format|
           format.json { render json: @project.errors, status: :unprocessable_entity }
         end
       end
+      
+        
     end
 
     private
